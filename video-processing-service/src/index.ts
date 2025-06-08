@@ -1,4 +1,5 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+
 import { 
   uploadProcessedVideo,
   downloadRawVideo,
@@ -15,7 +16,8 @@ const app = express();
 app.use(express.json());
 
 // Process a video file from Cloud Storage into 360p
-app.post('/process-video', async (req: Request, res: Response) => {
+app.post('/process-video', async (req, res) => {
+
   // Get the bucket and filename from the Cloud Pub/Sub message
   let data;
   try {
@@ -37,7 +39,7 @@ app.post('/process-video', async (req: Request, res: Response) => {
 
   // Process the video into 360p
   try { 
-    await convertVideo(inputFileName, outputFileName);
+    await convertVideo(inputFileName, outputFileName)
   } catch (err) {
     await Promise.all([
       deleteRawVideo(inputFileName),
@@ -48,19 +50,16 @@ app.post('/process-video', async (req: Request, res: Response) => {
   
   // Upload the processed video to Cloud Storage
   await uploadProcessedVideo(outputFileName);
-  
+
   await Promise.all([
     deleteRawVideo(inputFileName),
     deleteProcessedVideo(outputFileName)
   ]);
-  
+
   return res.status(200).send('Processing finished successfully');
 });
 
-const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
-
-app.listen(port, '0.0.0.0', () => {
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
-
-export default app;
