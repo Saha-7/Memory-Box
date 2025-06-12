@@ -1,5 +1,8 @@
+'use client'
+
 import Image from "next/image"
 import Link from "next/link"
+import SignIn from "./signin"
 
 export default function Navbar() {
     return(
@@ -13,6 +16,7 @@ export default function Navbar() {
                 className="w-20 h-20 rounded-full" 
             />
             </Link>
+            <SignIn/>
         </nav>
     )
 }
