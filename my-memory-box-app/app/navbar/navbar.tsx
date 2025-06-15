@@ -6,6 +6,7 @@ import SignIn from "./signin"
 import { useEffect, useState } from "react"
 import { onAuthStateChangedHelper } from "../firebase/firebase"
 import { User } from "firebase/auth"
+import Upload from "./upload"
 
 export default function Navbar() {
     // Initialized user state
@@ -30,6 +31,7 @@ export default function Navbar() {
                 className="w-16 h-16 rounded-full" 
             />
             </Link>
+            { user && <Upload/>}
             <SignIn user={user}/>
         </nav>
     )
