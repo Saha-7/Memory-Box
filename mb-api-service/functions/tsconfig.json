@@ -31,6 +31,6 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["functions"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }
