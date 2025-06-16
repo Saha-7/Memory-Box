@@ -1,4 +1,5 @@
-import { getFunctions, httpsCallable, HttpsCallableResult } from 'firebase/functions';
+import {  httpsCallable, HttpsCallableResult } from 'firebase/functions';
+import { functions } from './firebase';
 
 // Define a minimal type that matches what the tutorial expects
 interface UploadUrlResponse {
@@ -6,12 +7,23 @@ interface UploadUrlResponse {
   [key: string]: unknown; // Allow other properties but ensure url exists
 }
 
-const functions = getFunctions();
+
 
 const generateUploadUrlFunction = httpsCallable<
   { fileExtension: string | undefined }, 
   UploadUrlResponse
 >(functions, 'generateUploadUrl');
+
+const getVideosFunction = httpsCallable(functions, 'getVideos');
+
+export interface Video {
+  id?: string,
+  uid?: string,
+  filename?: string,
+  status?: 'processing' | 'processed',
+  title?: string,
+  description?: string  
+}
 
 export async function uploadVideo(file: File): Promise<Response> {
   const response: HttpsCallableResult<UploadUrlResponse> = await generateUploadUrlFunction({
@@ -28,4 +40,10 @@ export async function uploadVideo(file: File): Promise<Response> {
   });
 
   return uploadResult;
+}
+
+
+export async function getVideos() {
+  const response = await getVideosFunction();
+  return response.data as Video[];
 }
